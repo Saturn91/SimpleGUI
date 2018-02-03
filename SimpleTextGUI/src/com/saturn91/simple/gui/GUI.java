@@ -23,36 +23,54 @@ public abstract class GUI extends JFrame{
 	private JPanel background;
 	private JScrollPane scrollPane;
 
+	private boolean fullscreen = false;
+
 	public static final int default_border = 10;
 	public static final Color background1 = new Color(0.15f, 0.5f, 0.15f);
 	public static final Color background2 = new Color(0.3f, 0.6f, 0.3f);
 
-	public GUI(String title, String[] btnNames){
+	public GUI(String title, String[] btnNames, boolean fullscreen){
+		init(title, btnNames, fullscreen);
+	}
+	
+	public GUI(String title, String[] btnNames) {
+		init(title, btnNames, false);
+	}
+	
+	private void init(String title, String[] btnNames, boolean fullscreen) {
 		this.setTitle(title);
 		this.setLayout(null);
-		this.setSize(750, 420);
-		this.setLocationRelativeTo(null);
+		if(fullscreen) {
+			this.fullscreen = true;
+			super.setExtendedState(JFrame.MAXIMIZED_BOTH);
+			super.setUndecorated(true);
+			super.setResizable(false);
+		}else{
+			super.setSize(750, 420);
+		}
 
+		this.setLocationRelativeTo(null);
 		addComponentListener(new ComponentListener() {
-			
+
 			@Override
 			public void componentShown(ComponentEvent e) {
-				
+
 			}
-			
+
 			@Override
 			public void componentResized(ComponentEvent e) {
-				setBounds();				
+				setBounds();	
+				setLocationRelativeTo(null);
 			}
-			
+
 			@Override
 			public void componentMoved(ComponentEvent e) {
-				
+
 			}
-			
+
 			@Override
 			public void componentHidden(ComponentEvent e) {
-				
+
 			}
 		});
 
@@ -67,6 +85,7 @@ public abstract class GUI extends JFrame{
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		this.setVisible(true);		
+		setBounds();
 	}
 
 	private void initTextArea() {
@@ -86,6 +105,20 @@ public abstract class GUI extends JFrame{
 	}
 
 	private void initButtons(String[] btnNames) {
+		if(fullscreen) {
+			JButton btn = new JButton("Close");
+			btn.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.exit(1);					
+				}
+			});
+			
+			btn.setBounds(default_border, getHeight() -200, 150, 50);
+			add(btn);
+		}		
+		
 		panel = new JPanel();
 		panel.setBackground(background2);
 		panel.setBounds(default_border,  2*default_border + (getHeight()-2*default_border-getHeight()/3), getWidth()-2*default_border-10, getHeight()/3);
@@ -104,9 +137,22 @@ public abstract class GUI extends JFrame{
 
 			panel.add(btn);
 		}
+		
+		if(fullscreen) {
+			JButton btn = new JButton("Close");
+			btn.setBackground(background1);
+			btn.setForeground(Color.YELLOW);
+			btn.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.exit(1);					
+				}
+			});
 
-
-
+			panel.add(btn);
+		}	
+		
 		add(panel);
 	}
 
@@ -125,6 +171,11 @@ public abstract class GUI extends JFrame{
 		textBuffer.setLength(0);
 		textBuffer.append(text);
 		textOutput.setText(text);
+	}
+
+	public void setSize(int width, int height) {
+		super.setSize(width, height);
+		setBounds();
 	}
 
 	protected abstract void onButton(String btnName);
