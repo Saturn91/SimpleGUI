@@ -1,6 +1,7 @@
 package com.saturn91.simple.gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -98,31 +99,26 @@ public abstract class GUI extends JFrame{
 		textOutput.setFont(new Font("Helvetica", Font.PLAIN, 18));
 
 		scrollPane = new JScrollPane(textOutput,  JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(default_border, default_border, getWidth()-2*default_border-10, getHeight()-2*default_border-getHeight()/3);
+		scrollPane.setBounds(default_border, default_border, getWidth()-2*default_border-10, getHeight()-2*default_border-getHeight()*1/4);
 		add(scrollPane);
 
 		textBuffer = new StringBuilder();
 	}
 
 	private void initButtons(String[] btnNames) {
-		if(fullscreen) {
-			JButton btn = new JButton("Close");
-			btn.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					System.exit(1);					
-				}
-			});
-			
-			btn.setBounds(default_border, getHeight() -200, 150, 50);
-			add(btn);
-		}		
 		
-		panel = new JPanel();
+		Component[] toRemove = null;
+		
+		if(panel != null) {
+			toRemove = panel.getComponents();
+		}else {
+			panel = new JPanel();
+			add(panel);
+		}
+		
 		panel.setBackground(background2);
-		panel.setBounds(default_border,  2*default_border + (getHeight()-2*default_border-getHeight()/3), getWidth()-2*default_border-10, getHeight()/3);
-		panel.setLayout(new FlowLayout());
+		panel.setBounds(default_border,  2*default_border + (getHeight()-2*default_border-getHeight()*1/4), getWidth()-2*default_border-10, getHeight()*1/4);
+		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
 		for(int i = 0; i < btnNames.length; i++) {
 			final JButton btn = new JButton(btnNames[i]);	
@@ -153,13 +149,19 @@ public abstract class GUI extends JFrame{
 			panel.add(btn);
 		}	
 		
-		add(panel);
+		if(toRemove != null) {
+			for(int i = 0; i < toRemove.length; i++) {
+				panel.remove(toRemove[i]);
+			}
+		}
+		panel.revalidate();
+		repaint();
 	}
 
 	private void setBounds() {
-		panel.setBounds(default_border,  2*default_border + (getHeight()-2*default_border-getHeight()/3), getWidth()-2*default_border-10, getHeight()/3);
+		panel.setBounds(default_border,  2*default_border + (getHeight()-2*default_border-getHeight()*1/4), getWidth()-2*default_border-10, getHeight()*1/4);
 		background.setBounds(0, 0, getWidth(), getHeight());
-		scrollPane.setBounds(default_border, default_border, getWidth()-2*default_border-10, getHeight()-2*default_border-getHeight()/3);
+		scrollPane.setBounds(default_border, default_border, getWidth()-2*default_border-10, getHeight()-2*default_border-getHeight()*1/4);
 	}
 
 	public void addText(String text) {
@@ -176,6 +178,10 @@ public abstract class GUI extends JFrame{
 	public void setSize(int width, int height) {
 		super.setSize(width, height);
 		setBounds();
+	}
+	
+	public void setBtnList(String[] btnNames) {
+		initButtons(btnNames);
 	}
 
 	protected abstract void onButton(String btnName);
