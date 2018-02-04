@@ -14,23 +14,29 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 public abstract class GUI extends JFrame{
 
 	private static final long serialVersionUID = -1613166043727267630L;
-	private JTextArea textOutput;
+	private JTextPane textOutput;
 	private StringBuilder textBuffer;
 	private JPanel panel;
 	private JPanel background;
 	private JScrollPane scrollPane;
 
 	private boolean fullscreen = false;
+	private boolean centered = false;
 
 	public static final int default_border = 10;
 	public static final Color background1 = new Color(0.15f, 0.5f, 0.15f);
 	public static final Color background2 = new Color(0.3f, 0.6f, 0.3f);
 
-	public GUI(String title, String[] btnNames, boolean fullscreen){
+	public GUI(String title, String[] btnNames, boolean fullscreen, boolean centered){
+		this.centered = centered;
 		init(title, btnNames, fullscreen);
 	}
 	
@@ -90,7 +96,14 @@ public abstract class GUI extends JFrame{
 	}
 
 	private void initTextArea() {
-		textOutput = new JTextArea();
+		textOutput = new JTextPane();
+		
+		if(centered) {
+			StyledDocument doc = textOutput.getStyledDocument();
+			SimpleAttributeSet center = new SimpleAttributeSet();
+			StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+			doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		}
 
 		textOutput.setForeground(Color.GREEN);
 		textOutput.setBackground(background1);
@@ -189,5 +202,10 @@ public abstract class GUI extends JFrame{
 	}
 
 	protected abstract void onButton(String btnName);
+	
+	public void setCentered(boolean centered) {
+		this.centered = centered;
+		initTextArea();
+	}
 
 }

@@ -8,7 +8,7 @@ public class TestGUI {
 	public static void main(String[] args) {
 		String[] btnNames = {"OK", "v", "^", "Option 1", "Option2"};
 		String[] btnNames2 = {"Hello", "Back"};
-		GUI gui = new GUI("Hello", btnNames, true) {
+		GUI gui = new GUI("Hello", btnNames, true, false) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -27,6 +27,8 @@ public class TestGUI {
 				}
 			}
 		};	
+		
+		gui.setCentered(true);
 		
 	}
 }
