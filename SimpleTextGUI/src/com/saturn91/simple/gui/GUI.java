@@ -174,6 +174,10 @@ public abstract class GUI extends JFrame{
 		textBuffer.append(text);
 		textOutput.setText(text);
 	}
+	
+	public void addLine(String line) {
+		addText(line + "\n");
+	}
 
 	public void setSize(int width, int height) {
 		super.setSize(width, height);
