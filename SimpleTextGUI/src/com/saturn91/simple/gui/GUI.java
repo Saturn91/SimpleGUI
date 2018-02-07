@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -31,6 +32,8 @@ public abstract class GUI extends JFrame{
 
 	private boolean fullscreen = false;
 	private boolean centered = false;
+	
+	private FontMetrics fontMetrics;
 
 	public static final int default_border = 10;
 	public static final Color background1 = new Color(0.15f, 0.5f, 0.15f);
@@ -128,8 +131,9 @@ public abstract class GUI extends JFrame{
 
 		textOutput.setEditable(false);
 		textOutput.setFont(new Font("Helvetica", Font.PLAIN, 18));
-
-		scrollPane = new JScrollPane(textOutput,  JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		fontMetrics = textOutput.getFontMetrics(textOutput.getFont());
+		scrollPane = new JScrollPane(textOutput);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setBounds(default_border, default_border, getWidth()-2*default_border-10, getHeight()-2*default_border-getHeight()*1/4);
 		add(scrollPane);
 
@@ -197,13 +201,27 @@ public abstract class GUI extends JFrame{
 
 	public void addText(String text) {
 		textBuffer.append(text);
-		textOutput.setText(textBuffer.toString());
+		redrawText();
 	}
 
 	public void setText(String text) {
 		textBuffer.setLength(0);
 		textBuffer.append(text);
-		textOutput.setText(text);
+		redrawText();
+	}
+	
+	public void redrawText() {
+		StringBuilder linedText = new StringBuilder();
+		StringBuilder temp = new StringBuilder(textBuffer.toString());
+		for(final Character c : textBuffer.toString().toCharArray()) {
+		    if(fontMetrics.stringWidth(temp.toString()) > scrollPane.getWidth()-1) { 
+		    	temp.setLength(temp.length() - 1); 
+		    	linedText.append(temp.toString()+ "\n"); 
+		        temp = new StringBuilder(c.toString()); 
+		    }
+		}
+		linedText.append(temp.toString()); 
+		textOutput.setText(linedText.toString().substring(0, linedText.length()-1));
 	}
 	
 	public void addLine(String line) {
