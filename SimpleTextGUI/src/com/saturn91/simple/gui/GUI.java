@@ -221,7 +221,9 @@ public abstract class GUI extends JFrame{
 		    }
 		}
 		linedText.append(temp.toString()); 
-		textOutput.setText(linedText.toString().substring(0, linedText.length()-1));
+		if(linedText.length() > 0) {
+			textOutput.setText(linedText.toString().substring(0, linedText.length()-1));
+		}		
 	}
 	
 	public void addLine(String line) {
