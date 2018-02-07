@@ -15,6 +15,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
@@ -251,4 +252,14 @@ public abstract class GUI extends JFrame{
 	public abstract void guiKeyReleased(KeyEvent e);
 	
 	public abstract void guiKeyPressed(KeyEvent e);
+	
+	public void scrollDown() {
+		JScrollBar vertical = scrollPane.getVerticalScrollBar();
+		try {
+			Thread.sleep(100);
+		} catch (Exception e) {
+			
+		}		
+		scrollPane.getVerticalScrollBar().setValue(vertical.getMaximum());
+	}
 }
