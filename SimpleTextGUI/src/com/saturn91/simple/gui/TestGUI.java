@@ -2,6 +2,7 @@ package com.saturn91.simple.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 
 public class TestGUI {
 
@@ -25,6 +26,24 @@ public class TestGUI {
 				if(btnName.equals("Back")) {
 					setBtnList(btnNames);
 				}
+			}
+
+			@Override
+			public void guiKeyTyped(KeyEvent e) {
+				System.out.println("yep1!");
+				addLine("yep1");
+			}
+
+			@Override
+			public void guiKeyReleased(KeyEvent e) {
+				System.out.println("yep2!");
+				addLine("yep2");
+			}
+
+			@Override
+			public void guiKeyPressed(KeyEvent e) {
+				System.out.println("yep3!");
+				addLine("yep3");
 			}
 		};	
 		

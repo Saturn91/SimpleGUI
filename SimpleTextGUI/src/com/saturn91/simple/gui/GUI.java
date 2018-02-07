@@ -8,12 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -90,7 +91,24 @@ public abstract class GUI extends JFrame{
 		add(background);
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+		this.setFocusable(true);
+		this.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				guiKeyTyped(e);
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				guiKeyReleased(e);				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				guiKeyTyped(e);				
+			}
+		});
 		this.setVisible(true);		
 		setBounds();
 	}
@@ -207,5 +225,10 @@ public abstract class GUI extends JFrame{
 		this.centered = centered;
 		initTextArea();
 	}
-
+	
+	public abstract void guiKeyTyped(KeyEvent e);
+	
+	public abstract void guiKeyReleased(KeyEvent e);
+	
+	public abstract void guiKeyPressed(KeyEvent e);
 }
